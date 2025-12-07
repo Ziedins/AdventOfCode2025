@@ -43,6 +43,7 @@ func check(e error) {
 func main() {
 	f, err := os.Open("input")
 	check(err)
+	defer f.Close()
 
 	b1 := make([]byte, 1)
 	var i int = 0
