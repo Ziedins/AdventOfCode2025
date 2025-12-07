@@ -24,14 +24,36 @@ func processInvalidIds(seq Sequence) int {
 	for i := seq.startingNumber; i <= seq.lastNumber; i++ {
 		numberAsString := strconv.Itoa(i)
 		numberLength := len(numberAsString)
-		if numberLength%2 != 0 {
-			continue
+		// fmt.Printf("Number to be dissected: %d\n", i)
+		isRepeating := false;
+		for j := 1; j <= numberLength/2; j++ {
+			if numberLength%j != 0 {
+				continue
+			}
+			// fmt.Printf("[0,%v]", j)
+			digitSequence := numberAsString[0:j]
+			// seqLength := len(digitSequence)
+			runesLeft := numberLength - j
+			z := 0
+			for k := 0; z < runesLeft/j; k = k + j {
+				// fmt.Printf("Comparing %s and %s", digitSequence, numberAsString[k+j:k+j+j])
+				if digitSequence != numberAsString[k+j:k+j+j] {
+					// println("-nope")
+					isRepeating = false
+					break
+				} else {
+					// println("-yup")
+				}
+				isRepeating = true
+				z++
+			}
+			if isRepeating {
+				break;
+			}
 		}
-		half := numberLength / 2
-		// fmt.Printf("Combo %s : %s\n", string(numberAsString[0:half]), string(numberAsString[half:]))
-		if numberAsString[0:half] == numberAsString[half:] {
+		if isRepeating {
 			invalidIdSum += i
-			fmt.Printf("Number : %s, has %d digits and their halves are the same\n", numberAsString, len(numberAsString))
+			fmt.Printf("is Repeating : %d\n", i)
 		}
 	}
 
@@ -78,6 +100,6 @@ func main() {
 		invalidIdSum += processInvalidIds(seq)
 	}
 	check(err)
-	
+
 	fmt.Printf("Invalid id sum : %d\n", invalidIdSum)
 }
